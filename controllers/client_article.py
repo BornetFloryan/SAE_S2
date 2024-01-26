@@ -14,7 +14,7 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   SELECT vetement.id_vetement as id , 
+    sql = '''   SELECT vetement.id_vetement as id_article, 
                 nom_vetement as nom, 
                 prix_vetement as prix,  
                 image as image, 
@@ -33,10 +33,21 @@ def client_article_show():                                 # remplace client_ind
 
 
     # pour le filtre
-    types_article = []
+    sql = '''SELECT id_type_vetement  AS id_type_article
+             ,libelle_type_vetement AS libelle
+             FROM type_vetement
+             ORDER BY  libelle_type_vetement
+                '''
+    mycursor.execute(sql)
+    types_article = mycursor.fetchall()
 
-
-    articles_panier = []
+    sql = '''SELECT * ,
+           ROUND(prix_vetement, 2) as prix ,
+           nom_vetement as nom
+           FROM ligne_panier
+           LEFT JOIN vetement on vetement.id_vetement = ligne_panier.vetement_id'''
+    mycursor.execute(sql)
+    articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
         sql = ''' calcul du prix total du panier '''
