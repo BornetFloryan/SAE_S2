@@ -28,7 +28,6 @@ app = Flask(__name__)
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
 
-load_dotenv("./.env")
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
     if request.method == 'POST':
